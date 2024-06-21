@@ -12,12 +12,16 @@ public class ClientHandler {
     private Server server;
     private String username;
 
+    private ChatHistory chatHistory;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
+
+        chatHistory = new ChatHistory("chat_history.txt");
+        System.out.println(chatHistory.readHistory());
 
         new Thread(() -> {
             try {
@@ -67,7 +71,6 @@ public class ClientHandler {
 
     }
 
-
     public void executeCmd(String msg) throws IOException {
         if(msg.startsWith("/p ")) {
             String[] tokens = msg.split("\\s+", 3);
@@ -80,6 +83,7 @@ public class ClientHandler {
     public void sendMessage(String msg) {
         try {
             out.writeUTF(msg);
+            chatHistory.writeMessage(msg);
         }catch (IOException e) {
             disconnect();
         }

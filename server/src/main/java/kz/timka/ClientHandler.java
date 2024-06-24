@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class ClientHandler {
     private Socket socket;
@@ -11,6 +12,8 @@ public class ClientHandler {
     private DataOutputStream out;
     private Server server;
     private String username;
+
+    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
 
     private ChatHistory chatHistory;
 
@@ -69,6 +72,8 @@ public class ClientHandler {
             }
         }).start();
 
+        logger.info("New client handler created for socket: " + socket);
+
     }
 
     public void executeCmd(String msg) throws IOException {
@@ -84,7 +89,9 @@ public class ClientHandler {
         try {
             out.writeUTF(msg);
             chatHistory.writeMessage(msg);
+            logger.info("Message sent: " + msg);
         }catch (IOException e) {
+            logger.severe("Failed to send message: " + msg);
             disconnect();
         }
     }

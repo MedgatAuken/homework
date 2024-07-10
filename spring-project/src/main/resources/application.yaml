@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: spring-project
+  main:
+    banner-mode: off
+
+logging:
+  level:
+    root: INFO
+    kz.medgat.spring_project: DEBUG
